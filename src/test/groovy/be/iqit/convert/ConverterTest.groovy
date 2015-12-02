@@ -1,15 +1,14 @@
 package be.iqit.convert
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
 
 /**
  * Created by dvanroeyen on 02/12/15.
  */
-class ObjectMapperConverterTest extends Specification {
+class ConverterTest extends Specification {
 
-    ObjectMapperConverter converter = new ObjectMapperConverter(new ObjectMapper())
+    FactoryConverter converter = new FactoryConverter().withDefaultConverter(new ObjectMapperConverter())
 
     def "can convert to String"() {
         given:
