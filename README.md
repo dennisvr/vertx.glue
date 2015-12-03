@@ -28,7 +28,7 @@ Provide Observable methods for converting objects from and to other representati
 ## RouteBuilder ##
 
 ### Goal ###
-Provide a simple way to serve http requests. Request parameters, request body and response body can be assigned a Class to be used for conversion. 
+Provide a simple way to serve http requests. Request parameters, request body, response body and error message can be assigned a Class to be used for conversion. Underlying this will use the Converter framework.
 
 ### Example ###
 
