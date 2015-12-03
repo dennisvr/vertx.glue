@@ -32,7 +32,7 @@ class VerticleUserService extends AbstractVerticle implements UserService {
     }
 
     @Override
-    Observable<User> getUsers() {
-        return userRepository.getUsers()
+    Observable<List<User>> getUsers() {
+        return userRepository.getUsers().toList()
     }
 }

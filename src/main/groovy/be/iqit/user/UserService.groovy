@@ -11,6 +11,6 @@ interface UserService {
 
     Observable<User> saveUser(User user)
 
-    Observable<User> getUsers()
+    Observable<List<User>> getUsers()
 
 }
