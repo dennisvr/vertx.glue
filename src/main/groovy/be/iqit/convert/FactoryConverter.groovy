@@ -5,7 +5,7 @@ import rx.Observable
 /**
  * Created by dvanroeyen on 02/12/15.
  */
-class FactoryConverter extends AbstractConverter {
+class FactoryConverter<I,O> extends AbstractConverter<I,O> {
 
     Map<Class, Converter> map = [:]
     Converter defaultConverter
@@ -20,7 +20,7 @@ class FactoryConverter extends AbstractConverter {
     }
 
     @Override
-    def <I, O> Observable<O> doConvert(I object, Class<O> clazz) {
+    Observable<O> doConvert(I object, Class<O> clazz) {
         Converter converter = findConverter(object?.getClass(), clazz)
         if(!converter) {
             throw new IllegalArgumentException("No converter for ${object.getClass()} to ${clazz}")

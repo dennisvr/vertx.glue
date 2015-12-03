@@ -5,9 +5,9 @@ import rx.Observable;
 /**
  * Created by dvanroeyen on 02/12/15.
  */
-public interface Converter {
+public interface Converter<I,O> {
 
-    <I,O> Observable<O> convert(Observable<I> object, Class<O> clazz);
+    Observable<O> convert(Observable<I> object, Class<O> clazz);
 
-    <I,O> Observable<O> convert(I object, Class<O> clazz);
+    Observable<O> convert(I object, Class<O> clazz);
 }
