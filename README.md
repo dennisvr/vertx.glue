@@ -28,7 +28,7 @@ Provide Observable methods for converting objects from and to other representati
 ## RouteBuilder ##
 
 ### Goal ###
-Provide a simple way to serve http requests including Conversion logic
+Provide a simple way to serve http requests. Request parameters, request body and response body can be assigned a Class to be used for conversion. 
 
 ### Example ###
 
@@ -64,7 +64,7 @@ class UserRestVerticle extends AbstractRestVerticle {
                 }
 
         post("/users/:id")
-                .withRequest(User)
+                .withRequest(SaveUserCommand)
                 .withResponse(UserDTO)
                 .handle { params, User user ->
                     return userService.saveUser(user)
