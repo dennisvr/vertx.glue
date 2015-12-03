@@ -11,7 +11,7 @@ Experimental vertx + RXJava + Mongo stack
 ## Converter ##
 
 ### Goal ###
-Provide a framework for converting object from and to other representations.
+Provide RXJava based methods for converting object from and to other representations. Typically used to convert from and to JSON.
 
 ### Example ###
 
