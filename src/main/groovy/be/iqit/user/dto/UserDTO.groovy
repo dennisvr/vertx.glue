@@ -1,4 +1,4 @@
-package be.iqit.user
+package be.iqit.user.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

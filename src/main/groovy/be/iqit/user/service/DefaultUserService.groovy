@@ -1,5 +1,7 @@
-package be.iqit.user
+package be.iqit.user.service
 
+import be.iqit.user.domain.User
+import be.iqit.user.repository.UserRepository
 import rx.Observable
 
 /**

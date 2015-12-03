@@ -1,8 +1,9 @@
-package be.iqit.user
+package be.iqit.user.service
 
 import be.iqit.convert.Converter
 import be.iqit.convert.ObjectMapperConverter
 import be.iqit.event.EventBuilder
+import be.iqit.user.domain.User
 import io.vertx.core.Vertx
 import rx.Observable
 

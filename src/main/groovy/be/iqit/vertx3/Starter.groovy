@@ -2,11 +2,11 @@ package be.iqit.vertx3
 
 import be.iqit.convert.ObjectMapperConverter
 import be.iqit.event.DefaultVerticle
-import be.iqit.user.DefaultUserService
-import be.iqit.user.MongoUserRepository
-import be.iqit.user.RemoteUserService
-import be.iqit.user.UserRestVerticle
-import be.iqit.user.UserService
+import be.iqit.user.service.DefaultUserService
+import be.iqit.user.repository.MongoUserRepository
+import be.iqit.user.service.RemoteUserService
+import be.iqit.user.rest.UserRestVerticle
+import be.iqit.user.service.UserService
 import com.mongodb.async.client.MongoClient
 import com.mongodb.async.client.MongoClients
 import com.mongodb.async.client.MongoDatabase

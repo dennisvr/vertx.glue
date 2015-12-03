@@ -1,8 +1,9 @@
-package be.iqit.user
+package be.iqit.user.repository
 
 import be.iqit.convert.Converter
 import be.iqit.convert.ObjectMapperConverter
 import be.iqit.mongo.MongoUtil
+import be.iqit.user.domain.User
 import com.mongodb.async.client.MongoCollection
 import com.mongodb.async.client.MongoDatabase
 import com.mongodb.client.model.Filters

@@ -1,7 +1,11 @@
-package be.iqit.user
+package be.iqit.user.rest
 
 import be.iqit.rest.AbstractRestVerticle
 import be.iqit.rest.ErrorDTO
+import be.iqit.user.domain.User
+import be.iqit.user.domain.UserFilter
+import be.iqit.user.dto.UserDTO
+import be.iqit.user.service.UserService
 import com.fasterxml.jackson.databind.ObjectMapper
 
 /**
