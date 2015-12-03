@@ -1,4 +1,4 @@
-package be.iqit.util;
+package be.iqit.mongo;
 
 /**
  * Created by dvanroeyen on 30/11/15.
@@ -15,7 +15,7 @@ import rx.Subscriber;
 /**
  * Created by dvanroeyen on 30/11/15.
  */
-class MongoUtil {
+public class MongoUtil {
 
     public static <E> Observable<E> asObservable(FindIterable<E> iterable) {
         return asObservable(Observables.observe(iterable));

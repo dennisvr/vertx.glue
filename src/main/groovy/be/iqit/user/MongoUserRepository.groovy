@@ -1,6 +1,6 @@
 package be.iqit.user
 
-import be.iqit.util.MongoUtil
+import be.iqit.mongo.MongoUtil
 import com.mongodb.async.client.MongoCollection
 import com.mongodb.async.client.MongoDatabase
 import com.mongodb.client.model.Filters
