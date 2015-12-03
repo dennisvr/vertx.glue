@@ -3,7 +3,7 @@
 ## Converter ##
 
 ### Goal ###
-Provide Observable methods for converting object from and to other representations. Typically used to convert from and to JSON.
+Provide Observable methods for converting objects from and to other representations. Typically used to convert from and to JSON but supports conversion from and to any object.
 
 ### Example ###
 
