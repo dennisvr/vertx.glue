@@ -41,7 +41,7 @@ class UserRestVerticle extends AbstractRestVerticle {
                 .withParams(UserFilter)
                 .withResponse(UserDTO)
                 .handle { UserFilter filter, body ->
-                    return userService.getUsers().toList()
+                    return userService.getUsers()
                 }
 
         post("/users/:id")
