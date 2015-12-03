@@ -3,7 +3,7 @@
 ## Converter ##
 
 ### Goal ###
-Provide RXJava based methods for converting object from and to other representations. Typically used to convert from and to JSON.
+Provide Observable methods for converting object from and to other representations. Typically used to convert from and to JSON.
 
 ### Example ###
 
