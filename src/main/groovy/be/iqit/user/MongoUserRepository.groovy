@@ -1,5 +1,7 @@
 package be.iqit.user
 
+import be.iqit.convert.Converter
+import be.iqit.convert.ObjectMapperConverter
 import be.iqit.mongo.MongoUtil
 import com.mongodb.async.client.MongoCollection
 import com.mongodb.async.client.MongoDatabase
@@ -13,6 +15,7 @@ import rx.Observable
 class MongoUserRepository implements UserRepository {
 
     MongoCollection<Document> collection
+    Converter converter = new ObjectMapperConverter()
 
     public MongoUserRepository(MongoDatabase database) {
         this.collection = database.getCollection("users")
@@ -20,7 +23,7 @@ class MongoUserRepository implements UserRepository {
 
     @Override
     Observable<User> getUser(String id) {
-        return MongoUtil.asObservable(collection.find(Filters.eq('id', id)))
+        return converter.convert(MongoUtil.asObservable(collection.find(Filters.eq('id', id))), User)
     }
 
     @Override
