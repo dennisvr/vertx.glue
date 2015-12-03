@@ -1,6 +1,6 @@
 # README #
 
-Experimental vertx + RXJava + Mongo setup
+Experimental vertx + RXJava + Mongo stack
 
 ### Build ###
 
