@@ -82,3 +82,61 @@ class UserRestVerticle extends AbstractRestVerticle {
     }
 }
 ```
+
+## EventBuilder ##
+
+### Goal ###
+Provide a simple way to send and consume events on the Vertx EventBus
+
+### Example ###
+
+
+```
+#!groovy
+
+class RemoteUserService implements UserService {
+
+    Vertx vertx
+    Converter converter = new ObjectMapperConverter()
+    EventBuilder eventBuilder
+
+    public RemoteUserService(Vertx vertx) {
+        this.vertx = vertx
+        this.eventBuilder = new EventBuilder(UserService,converter, vertx)
+    }
+
+    @Override
+    Observable<User> getUser(String id) {
+        return eventBuilder.send(this.&getUser, User, id)
+    }
+}
+
+class VerticleUserService extends AbstractVerticle implements UserService {
+
+    UserRepository userRepository
+    Converter converter = new ObjectMapperConverter()
+    EventBuilder eventBuilder
+
+    public VerticleUserService(UserRepository userRepository) {
+        this.userRepository = userRepository
+    }
+
+    @Override
+    void start() throws Exception {
+        super.start()
+        eventBuilder = new EventBuilder(UserService, converter, vertx)
+        eventBuilder.consume(this.&getUser)
+    }
+
+    @Override
+    Observable<User> getUser(String id) {
+        return userRepository.getUser(id)
+    }
+
+
+}
+
+
+
+
+```
