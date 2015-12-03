@@ -6,6 +6,33 @@ Experimental vertx + RXJava + Mongo stack
 
 ./gradlew clean build
 
+# Concepts #
+
+## Converter ##
+
+### Goal ###
+Provide a framework for converting object from and to other representations.
+
+### Example ###
+
+```
+#!groovy
+
+    def "can convert from String"() {
+        given:
+        String value = '{"id":1,"name":"test"}'
+
+        when:
+        TestDomainA domain = converter.convert(value, TestDomainA).toBlocking().first()
+
+        then:
+        domain != null
+        domain.id == 1
+        domain.name == 'test'
+    }
+```
+
+
 ## RouteBuilder ##
 
 ### Goal ###
