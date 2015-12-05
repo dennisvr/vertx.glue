@@ -65,6 +65,7 @@ class EventBuilder {
                     @Override
                     void onError(Throwable e) {
                         e.printStackTrace()
+                        event.fail(500, e.message)
                     }
 
                     @Override
@@ -78,6 +79,7 @@ class EventBuilder {
                             @Override
                             void onError(Throwable e) {
                                 e.printStackTrace()
+                                event.fail(501, e.message)
                             }
 
                             @Override
