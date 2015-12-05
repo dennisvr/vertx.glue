@@ -7,14 +7,14 @@ import org.codehaus.groovy.runtime.MethodClosure
 /**
  * Created by dvanroeyen on 03/12/15.
  */
-class DefaultVerticle<E> extends AbstractVerticle {
+class EventVerticle<E> extends AbstractVerticle {
 
     Class<E> interfaceClass
     E instance
     Converter converter
 
 
-    public DefaultVerticle(Class<E> interfaceClass, E instance, Converter converter) {
+    public EventVerticle(Class<E> interfaceClass, E instance, Converter converter) {
         this.interfaceClass = interfaceClass
         this.instance = instance
         this.converter = converter

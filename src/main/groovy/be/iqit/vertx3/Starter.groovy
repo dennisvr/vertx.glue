@@ -1,7 +1,7 @@
 package be.iqit.vertx3
 
 import be.iqit.convert.ObjectMapperConverter
-import be.iqit.event.DefaultVerticle
+import be.iqit.event.EventVerticle
 import be.iqit.user.service.DefaultUserService
 import be.iqit.user.repository.MongoUserRepository
 import be.iqit.user.service.RemoteUserService
@@ -24,9 +24,10 @@ class Starter {
 
         DefaultUserService defaultUserService = new DefaultUserService(new MongoUserRepository(mongoDatabase))
         RemoteUserService remoteUserService = new RemoteUserService(vertx)
-        UserRestVerticle restVerticle = new UserRestVerticle(remoteUserService)
+        UserRestVerticle userRestVerticle = new UserRestVerticle(remoteUserService)
+        EventVerticle userEventVerticle = new EventVerticle(UserService, defaultUserService, new ObjectMapperConverter())
 
-        vertx.deployVerticle(new DefaultVerticle(UserService, defaultUserService, new ObjectMapperConverter()))
-        vertx.deployVerticle(restVerticle)
+        vertx.deployVerticle(userEventVerticle)
+        vertx.deployVerticle(userRestVerticle)
     }
 }
