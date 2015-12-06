@@ -1,6 +1,6 @@
 # vertx.glue #
 
-vertx.glue offers a few lightweight concepts to facilitate the development of vertx applications.
+vertx.glue offers a few lightweight concepts to facilitate the development of vertx applications. These concepts take away the boilerplate coding that's involved in developing a vertx application with a REST interface and integration with Mongo.  
 
 # Concepts #
 
