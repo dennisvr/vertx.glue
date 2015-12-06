@@ -1,3 +1,7 @@
+# vertx.glue #
+
+vertx.glue offers a few lightweight concepts to facilitate the development of vertx applications.
+
 # Concepts #
 
 ## Converter ##
