@@ -1,12 +1,12 @@
-package be.iqit.vertx.glue.user.rest
+package be.iqit.vertx.sample.user.rest
 
 import be.iqit.vertx.glue.rest.AbstractRestVerticle
 import be.iqit.vertx.glue.rest.ErrorDTO
-import be.iqit.vertx.glue.user.domain.User
-import be.iqit.vertx.glue.user.dto.UserDTO
-import be.iqit.vertx.glue.user.service.UserService
+import be.iqit.vertx.sample.user.domain.User
+import be.iqit.vertx.sample.user.dto.UserDTO
+import be.iqit.vertx.sample.user.service.UserService
 import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.user.domain.UserFilter
+import be.iqit.vertx.sample.user.domain.UserFilter
 
 /**
  * Created by dvanroeyen on 01/12/15.

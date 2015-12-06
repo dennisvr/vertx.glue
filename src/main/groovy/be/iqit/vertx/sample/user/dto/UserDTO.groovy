@@ -1,4 +1,4 @@
-package be.iqit.vertx.glue.user.dto
+package be.iqit.vertx.sample.user.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

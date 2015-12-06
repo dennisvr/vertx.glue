@@ -1,16 +1,16 @@
-package be.iqit.vertx.glue.user
+package be.iqit.vertx.sample.user
 
 import be.iqit.vertx.glue.event.EventVerticle
-import be.iqit.vertx.glue.user.domain.User
-import be.iqit.vertx.glue.user.repository.MongoUserRepository
-import be.iqit.vertx.glue.user.repository.UserRepository
-import be.iqit.vertx.glue.user.service.DefaultUserService
-import be.iqit.vertx.glue.user.service.UserService
+import be.iqit.vertx.sample.user.domain.User
+import be.iqit.vertx.sample.user.repository.MongoUserRepository
+import be.iqit.vertx.sample.user.repository.UserRepository
+import be.iqit.vertx.sample.user.service.DefaultUserService
+import be.iqit.vertx.sample.user.service.UserService
 import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.convert.ObjectMapperConverter
 import be.iqit.vertx.glue.mongo.MongoRepository
-import be.iqit.vertx.glue.user.rest.UserRestVerticle
-import be.iqit.vertx.glue.user.service.RemoteUserService
+import be.iqit.vertx.sample.user.rest.UserRestVerticle
+import be.iqit.vertx.sample.user.service.RemoteUserService
 import io.vertx.core.Vertx
 import org.bson.Document
 import rx.Observable

@@ -1,9 +1,9 @@
-package be.iqit.vertx.glue.user.repository
+package be.iqit.vertx.sample.user.repository
 
 import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.convert.FactoryConverter
 import be.iqit.vertx.glue.mongo.MongoRepository
-import be.iqit.vertx.glue.user.domain.User
+import be.iqit.vertx.sample.user.domain.User
 import com.mongodb.client.model.Filters
 import rx.Observable
 
