@@ -4,31 +4,6 @@ vertx.glue offers a few lightweight concepts to facilitate the development of ve
 
 # Concepts #
 
-## Converter ##
-
-### Goal ###
-Provide Observable methods for converting objects from and to other representations. Typically used to convert from and to JSON but supports conversion from and to any object.
-
-### Example ###
-
-```
-#!groovy
-
-    def "can convert from String"() {
-        given:
-        String value = '{"id":1,"name":"test"}'
-
-        when:
-        TestDomainA domain = converter.convert(value, TestDomainA).toBlocking().first()
-
-        then:
-        domain != null
-        domain.id == 1
-        domain.name == 'test'
-    }
-```
-
-
 ## RouteBuilder ##
 
 ### Goal ###
@@ -135,4 +110,28 @@ class VerticleUserService extends AbstractVerticle implements UserService {
 
 
 
+```
+
+## Converter ##
+
+### Goal ###
+Provide Observable methods for converting objects from and to other representations. Typically used to convert from and to JSON but supports conversion from and to any object.
+
+### Example ###
+
+```
+#!groovy
+
+    def "can convert from String"() {
+        given:
+        String value = '{"id":1,"name":"test"}'
+
+        when:
+        TestDomainA domain = converter.convert(value, TestDomainA).toBlocking().first()
+
+        then:
+        domain != null
+        domain.id == 1
+        domain.name == 'test'
+    }
 ```
