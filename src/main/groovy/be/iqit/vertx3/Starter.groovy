@@ -1,7 +1,11 @@
 package be.iqit.vertx3
 
+import be.iqit.convert.Converter
 import be.iqit.convert.ObjectMapperConverter
 import be.iqit.event.EventVerticle
+import be.iqit.mongo.DefaultMongoRepository
+import be.iqit.mongo.MongoRepository
+import be.iqit.user.repository.UserRepository
 import be.iqit.user.service.DefaultUserService
 import be.iqit.user.repository.MongoUserRepository
 import be.iqit.user.service.RemoteUserService
@@ -22,10 +26,13 @@ class Starter {
         MongoDatabase mongoDatabase = mongoClient.getDatabase("didditVle")
         Vertx vertx = Vertx.vertx()
 
-        DefaultUserService defaultUserService = new DefaultUserService(new MongoUserRepository(mongoDatabase))
-        RemoteUserService remoteUserService = new RemoteUserService(vertx)
-        UserRestVerticle userRestVerticle = new UserRestVerticle(remoteUserService)
-        EventVerticle userEventVerticle = new EventVerticle(UserService, defaultUserService, new ObjectMapperConverter())
+        Converter converter = new ObjectMapperConverter()
+        MongoRepository mongoRepository = new DefaultMongoRepository(mongoDatabase.getCollection("users"))
+        UserRepository userRepository = new MongoUserRepository(mongoRepository, converter)
+        DefaultUserService defaultUserService = new DefaultUserService(userRepository)
+        RemoteUserService remoteUserService = new RemoteUserService(vertx, converter)
+        UserRestVerticle userRestVerticle = new UserRestVerticle(remoteUserService, converter)
+        EventVerticle userEventVerticle = new EventVerticle(UserService, defaultUserService, converter)
 
         vertx.deployVerticle(userEventVerticle)
         vertx.deployVerticle(userRestVerticle)

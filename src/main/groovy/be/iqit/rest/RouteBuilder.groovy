@@ -29,8 +29,8 @@ class RouteBuilder {
     Class paramsClass = HashMap
     Class errorClass = Throwable
 
-    public RouteBuilder(Router router, ObjectMapper objectMapper) {
-        this.converter = new ObjectMapperConverter(objectMapper)
+    public RouteBuilder(Router router, Converter converter) {
+        this.converter = converter
         this.router  = router;
     }
 

@@ -13,11 +13,12 @@ import rx.Observable
 class RemoteUserService implements UserService {
 
     Vertx vertx
-    Converter converter = new ObjectMapperConverter()
+    Converter converter
     EventBuilder eventBuilder
 
-    public RemoteUserService(Vertx vertx) {
+    public RemoteUserService(Vertx vertx, Converter converter) {
         this.vertx = vertx
+        this.converter = converter
         this.eventBuilder = new EventBuilder(UserService,converter, vertx)
     }
 

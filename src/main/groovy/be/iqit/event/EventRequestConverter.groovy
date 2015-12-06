@@ -17,7 +17,7 @@ class EventRequestConverter extends AbstractConverter<EventRequest,List<Object>>
     }
 
     @Override
-    Observable<List<Object>> doConvert(EventRequest object, Class<List<Object>> clazz) {
+    Observable<List<Object>> convert(EventRequest object, Class<List<Object>> clazz) {
         return Observable.from(object.parameters).flatMap({ EventParameter parameter ->
             converter.convert(parameter.value, parameter.clazz)
         }).toList()

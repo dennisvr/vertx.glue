@@ -5,9 +5,9 @@ import rx.Observable
 /**
  * Created by dvanroeyen on 02/12/15.
  */
-class FactoryConverter<I,O> extends AbstractConverter<I,O> {
+class FactoryConverter<I,O> extends AbstractBaseConverter<I,O> {
 
-    Map<Class, Converter> map = [:]
+    Map<ConverterKey, Converter> map = [:]
     Converter defaultConverter
 
     FactoryConverter withDefaultConverter(Converter defaultConverter) {
@@ -17,6 +17,7 @@ class FactoryConverter<I,O> extends AbstractConverter<I,O> {
 
     FactoryConverter withConverter(Class from, Class to, Converter converter) {
         map.put(getKey(from, to), converter)
+        return this
     }
 
     @Override
@@ -33,10 +34,35 @@ class FactoryConverter<I,O> extends AbstractConverter<I,O> {
         if(!converter) {
             converter = defaultConverter
         }
+        println "Using converter ${converter} for ${from} to ${to}"
         return converter
     }
 
-    private String getKey(Class from, Class to) {
-        return from.getName()+'/'+to.getName()
+    private ConverterKey getKey(Class from, Class to) {
+        return new ConverterKey(from, to)
+    }
+
+    private class ConverterKey {
+        Class from
+        Class to
+
+        public ConverterKey(Class from, Class to) {
+            this.from = from
+            this.to = to
+        }
+        @Override
+        boolean equals(Object obj) {
+            if(!obj instanceof ConverterKey) {
+                return false
+            }
+            ConverterKey that = obj
+
+            return that.from.equals(this.from)&&that.to.equals(this.to)
+        }
+
+        @Override
+        int hashCode() {
+            return from.hashCode()+to.hashCode()
+        }
     }
 }

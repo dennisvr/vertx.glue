@@ -1,12 +1,12 @@
 package be.iqit.user.rest
 
+import be.iqit.convert.Converter
 import be.iqit.rest.AbstractRestVerticle
 import be.iqit.rest.ErrorDTO
 import be.iqit.user.domain.User
 import be.iqit.user.domain.UserFilter
 import be.iqit.user.dto.UserDTO
 import be.iqit.user.service.UserService
-import com.fasterxml.jackson.databind.ObjectMapper
 
 /**
  * Created by dvanroeyen on 01/12/15.
@@ -15,8 +15,8 @@ class UserRestVerticle extends AbstractRestVerticle {
 
     UserService userService
 
-    public UserRestVerticle(UserService userService) {
-        super(new ObjectMapper())
+    public UserRestVerticle(UserService userService, Converter converter) {
+        super(converter)
         this.userService = userService
     }
 

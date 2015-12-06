@@ -1,11 +1,11 @@
 package be.iqit.user.repository
 
 import be.iqit.convert.Converter
-import be.iqit.convert.ObjectMapperConverter
-import be.iqit.mongo.MongoUtil
+import be.iqit.convert.DocumentConverter
+import be.iqit.convert.FactoryConverter
+import be.iqit.mongo.DefaultMongoRepository
+import be.iqit.mongo.MongoRepository
 import be.iqit.user.domain.User
-import com.mongodb.async.client.MongoCollection
-import com.mongodb.async.client.MongoDatabase
 import com.mongodb.client.model.Filters
 import org.bson.Document
 import rx.Observable
@@ -15,20 +15,23 @@ import rx.Observable
  */
 class MongoUserRepository implements UserRepository {
 
-    MongoCollection<Document> collection
-    Converter converter = new ObjectMapperConverter()
+    MongoRepository repository
+    FactoryConverter converter
 
-    public MongoUserRepository(MongoDatabase database) {
-        this.collection = database.getCollection("users")
+    public MongoUserRepository(MongoRepository repository, Converter converter ) {
+        this.repository = repository
+        this.converter = new FactoryConverter()
+                .withDefaultConverter(converter)
+              //  .withConverter(Document, String, new DocumentConverter())
     }
 
     @Override
     Observable<User> getUser(String id) {
-        return converter.convert(MongoUtil.asObservable(collection.find(Filters.eq('id', id))), User)
+        return converter.convert(repository.find(Filters.eq('id', id)), User)
     }
 
     @Override
     Observable<User> getUsers() {
-        return MongoUtil.asObservable(collection.find())
+        return converter.convert(repository.find(), User)
     }
 }
