@@ -14,4 +14,5 @@ interface UserService {
 
     Observable<List<User>> getUsers()
 
+    Observable<User> getUserWithEmailAndPassword(String email, String password)
 }

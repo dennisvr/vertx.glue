@@ -1,8 +1,8 @@
-package be.iqit.vertx.sample.user
+package be.iqit.vertx.sample.rest
 
 import be.iqit.vertx.glue.rest.AbstractRestVerticle
 import be.iqit.vertx.glue.rest.ErrorDTO
-import be.iqit.vertx.sample.domain.User
+import be.iqit.vertx.glue.rest.RoutingContextParamsConverter
 import be.iqit.vertx.sample.user.dto.UserDTO
 import be.iqit.vertx.sample.user.service.UserService
 import be.iqit.vertx.glue.convert.Converter
@@ -17,9 +17,9 @@ class UserRestVerticle extends AbstractRestVerticle {
     UserService userService
 
     public UserRestVerticle(UserService userService, Converter converter) {
-        super(converter)
+        super(7070, converter)
         this.userService = userService
-        this.converter.withConverter(RoutingContext, UserFilter, new UserFilterConverter(this.converter))
+        this.converter.withConverter(RoutingContext, UserFilter, new RoutingContextParamsConverter(this.converter))
     }
 
     @Override

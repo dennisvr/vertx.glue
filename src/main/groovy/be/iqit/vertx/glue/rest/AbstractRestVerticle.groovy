@@ -5,6 +5,8 @@ import be.iqit.vertx.glue.convert.FactoryConverter
 import groovy.transform.TypeChecked
 import io.vertx.core.AbstractVerticle
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
+import io.vertx.ext.web.Session
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.SessionHandler
 import io.vertx.ext.web.handler.CookieHandler
@@ -17,11 +19,15 @@ import io.vertx.ext.web.sstore.SessionStore
 @TypeChecked
 abstract class AbstractRestVerticle extends AbstractVerticle {
 
+    int port
     FactoryConverter converter
     Router router
 
-    public AbstractRestVerticle(Converter converter) {
-        this.converter = new FactoryConverter().withDefaultConverter(converter)
+    public AbstractRestVerticle(int port, Converter converter) {
+        this.port = port
+        this.converter = new FactoryConverter()
+                .withDefaultConverter(converter)
+                .withConverter(RoutingContext, Session, new SessionConverter())
     }
 
     @Override
@@ -37,7 +43,7 @@ abstract class AbstractRestVerticle extends AbstractVerticle {
 
         this.configureRoutes();
 
-        vertx.createHttpServer().requestHandler({router.accept(it)}).listen(7070);
+        vertx.createHttpServer().requestHandler({router.accept(it)}).listen(this.port);
     }
 
     abstract public void configureRoutes();

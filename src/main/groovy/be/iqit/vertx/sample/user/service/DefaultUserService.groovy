@@ -35,4 +35,9 @@ class DefaultUserService implements UserService {
     Observable<List<User>> getUsers() {
         return userRepository.getUsers().toList()
     }
+
+    @Override
+    Observable<User> getUserWithEmailAndPassword(String email, String password) {
+        return this.userRepository.getUserWithEmailAndPassword(email, password)
+    }
 }

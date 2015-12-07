@@ -35,4 +35,9 @@ class RemoteUserService implements UserService {
     Observable<List<User>> getUsers() {
         return eventBuilder.send(this.&getUsers, User)
     }
+
+    @Override
+    Observable<User> getUserWithEmailAndPassword(String email, String password) {
+        return eventBuilder.send(this.&getUserWithEmailAndPassword, User, email, password)
+    }
 }

@@ -2,6 +2,7 @@ package be.iqit.vertx.sample.user
 
 import be.iqit.vertx.glue.event.EventVerticle
 import be.iqit.vertx.sample.domain.User
+import be.iqit.vertx.sample.rest.UserRestVerticle
 import be.iqit.vertx.sample.user.repository.MongoUserRepository
 import be.iqit.vertx.sample.user.repository.UserRepository
 import be.iqit.vertx.sample.user.service.DefaultUserService

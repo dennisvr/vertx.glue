@@ -31,4 +31,14 @@ class MongoUserRepository implements UserRepository {
     Observable<User> getUsers() {
         return converter.convert(repository.find(), User)
     }
+
+    @Override
+    Observable<User> getUserWithEmailAndPassword(String email, String password) {
+        return converter.convert(repository.find(
+                Filters.and(
+                    Filters.eq('email',email),
+                    Filters.eq('password',password)
+                )
+        ), User)
+    }
 }
