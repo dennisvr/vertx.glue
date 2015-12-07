@@ -7,7 +7,7 @@ vertx.glue offers a few lightweight concepts to facilitate the development of ve
 ## RouteBuilder ##
 
 ### Goal ###
-Provide a simple way to serve http requests. Request parameters, request body, response body and error message can be assigned a Class to be used for conversion. Underlying this will use the Converter framework.
+Provide a simple way to serve http requests. RoutingContext is automatically converted to every argument of the Closure passed as handler. Underlying this will use the Converter framework.
 
 ### Example ###
 
@@ -19,36 +19,33 @@ class UserRestVerticle extends AbstractRestVerticle {
 
     UserService userService
 
-    public UserRestVerticle(UserService userService) {
-        super(new ObjectMapper())
+    public UserRestVerticle(UserService userService, Converter converter) {
+        super(converter)
         this.userService = userService
+        
+        //Add a RoutingContext to UserFilter converter
+        this.converter.withConverter(RoutingContext, UserFilter, new UserFilterConverter(this.converter))
     }
 
     @Override
     void configureRoutes() {
 
         get("/users/:id")
-                .withParams(UserFilter)
                 .withResponse(UserDTO)
                 .withError(ErrorDTO)
-                .handle { UserFilter filter, body ->
+                .handle { UserFilter filter ->
                     return userService.getUser(filter.id)
                 }
 
         get("/users")
-                .withParams(UserFilter)
                 .withResponse(UserDTO)
-                .handle { UserFilter filter, body ->
+                .handle { UserFilter filter ->
                     return userService.getUsers()
                 }
 
         post("/users/:id")
-                .withRequest(SaveUserCommand)
                 .withResponse(UserDTO)
-                .handle { params, User user ->
-                    return userService.saveUser(user)
-                }
-
+                .handle(userService.&saveUser)
 
     }
 }
