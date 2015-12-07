@@ -1,4 +1,4 @@
-package be.iqit.vertx.sample.user.domain
+package be.iqit.vertx.sample.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

@@ -1,6 +1,6 @@
 package be.iqit.vertx.sample.user.service
 
-import be.iqit.vertx.sample.user.domain.User
+import be.iqit.vertx.sample.domain.User
 import rx.Observable
 
 /**

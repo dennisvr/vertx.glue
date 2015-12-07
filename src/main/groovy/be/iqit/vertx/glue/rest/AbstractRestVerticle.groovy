@@ -1,10 +1,15 @@
 package be.iqit.vertx.glue.rest
 
 import be.iqit.vertx.glue.convert.Converter
+import be.iqit.vertx.glue.convert.FactoryConverter
 import groovy.transform.TypeChecked
 import io.vertx.core.AbstractVerticle
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.ext.web.handler.SessionHandler
+import io.vertx.ext.web.handler.CookieHandler
+import io.vertx.ext.web.sstore.LocalSessionStore
+import io.vertx.ext.web.sstore.SessionStore
 
 /**
  * Created by dvanroeyen on 30/11/15.
@@ -12,11 +17,11 @@ import io.vertx.ext.web.handler.BodyHandler
 @TypeChecked
 abstract class AbstractRestVerticle extends AbstractVerticle {
 
-    Converter converter
+    FactoryConverter converter
     Router router
 
     public AbstractRestVerticle(Converter converter) {
-        this.converter = converter
+        this.converter = new FactoryConverter().withDefaultConverter(converter)
     }
 
     @Override
@@ -24,6 +29,11 @@ abstract class AbstractRestVerticle extends AbstractVerticle {
         super.start()
         this.router = Router.router(vertx)
         this.router.route().handler(BodyHandler.create())
+
+        router.route().handler(CookieHandler.create());
+        SessionStore store = LocalSessionStore.create(vertx);
+        SessionHandler sessionHandler = SessionHandler.create(store);
+        router.route().handler(sessionHandler);
 
         this.configureRoutes();
 

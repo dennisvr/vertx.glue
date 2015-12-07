@@ -50,19 +50,25 @@ class FactoryConverter<I,O> extends AbstractBaseConverter<I,O> {
             this.from = from
             this.to = to
         }
+
         @Override
         boolean equals(Object obj) {
             if(!obj instanceof ConverterKey) {
                 return false
             }
+
             ConverterKey that = obj
 
-            return that.from.equals(this.from)&&that.to.equals(this.to)
+            //Compatible from and equal to
+            return that.from.isAssignableFrom(this.from)&&that.to.equals(this.to)
+
+           // return that.from.equals(this.from)&&that.to.equals(this.to)
         }
 
         @Override
         int hashCode() {
-            return from.hashCode()+to.hashCode()
+            //only check to
+            return to.hashCode()
         }
     }
 }

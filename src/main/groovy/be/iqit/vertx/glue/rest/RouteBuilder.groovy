@@ -3,7 +3,6 @@ package be.iqit.vertx.glue.rest
 import be.iqit.vertx.glue.convert.Converter
 import com.fasterxml.jackson.databind.JsonNode
 import io.vertx.core.Handler
-import io.vertx.core.MultiMap
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.Router
@@ -11,6 +10,7 @@ import io.vertx.ext.web.RoutingContext
 import rx.Observable
 import rx.Observer
 import rx.functions.Func1
+import rx.functions.FuncN
 
 /**
  * Created by dvanroeyen on 01/12/15.
@@ -22,9 +22,7 @@ class RouteBuilder {
 
     Route route
 
-    Class requestClass = String
     Class responseClass = String
-    Class paramsClass = HashMap
     Class errorClass = Throwable
 
     public RouteBuilder(Router router, Converter converter) {
@@ -57,17 +55,6 @@ class RouteBuilder {
         return this
     }
 
-
-    public <E> RouteBuilder withParams(Class<E> paramsClass) {
-        this.paramsClass = paramsClass
-        return this
-    }
-
-    public <E> RouteBuilder withRequest(Class<E> requestBody) {
-        this.requestClass = requestBody
-        return this
-    }
-
     public RouteBuilder withConverter(Converter converter) {
         this.converter = converter
         return this
@@ -87,19 +74,13 @@ class RouteBuilder {
         this.route.handler(new Handler<RoutingContext>() {
             @Override
             void handle(RoutingContext routingContext) {
-                Observable.just(routingContext)
-                        .flatMap(toParams())
-                        .flatMap({params ->
-                            Observable.just(routingContext.getBodyAsString())
-                                    .flatMap(fromJson(requestClass))
-                                    .flatMap({object -> closure.call(params, object)})
-                                    .flatMap(toJson(responseClass))
-
-                        })
+                Observable.zip(closure.parameterTypes.collect { converter.convert(routingContext, it) }, { arguments ->
+                    return arguments
+                } as FuncN).flatMap({ arguments ->
+                    closure.call( *arguments )
+                }).flatMap(toJson(responseClass))
                         .subscribe(observe(routingContext))
             }
-
-
         })
     }
 
@@ -143,18 +124,6 @@ class RouteBuilder {
         }
     }
 
-
-    private <E> Func1<String, Observable<E>> fromJson(Class<E> clazz) {
-        { json ->
-            fromJson(json, clazz)
-        }
-    }
-
-    private <E> Observable<E> fromJson(String json, Class<E> clazz) {
-        return converter.convert(json, clazz)
-    }
-
-
     private <E> Func1<E,Observable<JsonNode>> toJson(Class<E> clazz) {
         { E e ->
             toJson(e, clazz)
@@ -164,20 +133,5 @@ class RouteBuilder {
     private Observable<JsonNode> toJson(Object e, Class clazz) {
         return converter.convert(converter.convert(e, clazz), JsonNode)
     }
-
-    private Func1<RoutingContext, Observable> toParams() {
-       return { routingContext ->
-           Observable.just(toMap(routingContext.request().params()))
-                    .flatMap({ params -> converter.convert(params, paramsClass) })
-       }
-
-    }
-
-    private Map<String, Object> toMap(MultiMap multiMap) {
-        def Map<String, Object> map = [:]
-        multiMap.each { map.put(it.key, it.value)}
-        return map
-    }
-
 
 }

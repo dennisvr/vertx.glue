@@ -9,7 +9,7 @@ import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.convert.ObjectMapperConverter
 import be.iqit.vertx.glue.mongo.DefaultMongoRepository
 import be.iqit.vertx.glue.mongo.MongoRepository
-import be.iqit.vertx.sample.user.rest.UserRestVerticle
+import be.iqit.vertx.sample.user.UserRestVerticle
 import be.iqit.vertx.sample.user.service.RemoteUserService
 import com.mongodb.async.client.MongoClient
 import com.mongodb.async.client.MongoClients

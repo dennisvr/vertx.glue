@@ -2,7 +2,7 @@ package be.iqit.vertx.sample.user.service
 
 import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.event.EventBuilder
-import be.iqit.vertx.sample.user.domain.User
+import be.iqit.vertx.sample.domain.User
 import io.vertx.core.Vertx
 import rx.Observable
 
