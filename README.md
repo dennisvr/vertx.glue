@@ -57,7 +57,7 @@ class UserRestVerticle extends AbstractRestVerticle {
 Provide a simple way to send and consume events on the Vertx EventBus. 
 
 ### Example ###
-In this example we have a UserService with a Remote implementation and a Verticle implementation. Ideally the Verticle doesn't implement the UserService but delegates the calls to a DefaultUserService implementation. A better approach is to use a Verticle implementation which takes an object and exposes it's method using EventBuilder.consume The DefaultVerticle implementation does exactly this.
+In this example we have a UserService with a Remote implementation and a Verticle implementation. Ideally the Verticle doesn't implement the UserService but delegates the calls to a DefaultUserService implementation. A better approach is to use a Verticle implementation which takes an object and exposes it's method using EventBuilder.consume The EventVerticle implementation does exactly this. But for illustration purposes we show 2 implementation of the UserService: A RemoteUserService and a VerticleUserService.
 
 ```
 #!groovy
