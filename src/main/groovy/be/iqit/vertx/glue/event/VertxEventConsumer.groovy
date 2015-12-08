@@ -15,39 +15,18 @@ import rx.Observer
 /**
  * Created by dvanroeyen on 03/12/15.
  */
-class EventBuilder {
+class VertxEventConsumer implements EventConsumer{
 
     FactoryConverter converter
     Vertx vertx
-    Class interfaceClass
 
-
-    public EventBuilder(Class interfaceClass, Converter converter, Vertx vertx) {
-        this.interfaceClass = interfaceClass
+    public VertxEventConsumer(Vertx vertx, Converter converter) {
+        this.vertx = vertx
         this.converter = new FactoryConverter().withDefaultConverter(converter)
         this.converter.withConverter(EventRequest,List,new EventRequestConverter(this.converter))
-        this.vertx = vertx
     }
 
-    public <O> Observable<O> send(MethodClosure method, Class<O> clazz, Object...params) {
-        return converter.convert(new EventRequest(params), JsonNode)
-                .map({message ->
-                    if(message instanceof Collection) {
-                        message = new ArrayNode().addAll(message)
-                    }
-                    return message.toString()
-                })
-                .flatMap({ message ->
-            AsyncResultObservableHandler<Message> handler = new AsyncResultObservableHandler<>()
-            String address = "${interfaceClass.name}.${method.method}"
-            vertx.eventBus().send(address, message , handler);
-            return handler.asObservable().flatMap({ m ->
-               converter.convert(converter.convert(m.body(), JsonNode), clazz)
-            })
-        })
-    }
-
-    public void consume(MethodClosure method) {
+    public <E> void consume(Class<E> interfaceClass, MethodClosure method) {
         String address = "${interfaceClass.name}.${method.method}"
         vertx.eventBus().consumer(address, new Handler<Message>() {
             @Override
@@ -93,4 +72,6 @@ class EventBuilder {
             }
         })
     }
+
+
 }
