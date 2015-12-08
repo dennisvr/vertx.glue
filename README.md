@@ -4,6 +4,37 @@ vertx.glue offers a few lightweight concepts to facilitate the development of ve
 
 # Concepts #
 
+## GlueBuilder ##
+
+Given an interface and it's implementation, GlueBuilder creates a Verticle for the implementation and a Remote implementation.
+
+In this example we have a UserService interface with a DefaultUserService implementation. With GlueBuilder we create a Verticle and a Remote implementation of the UserService to communicate with the Verticle. We pass the remote implementation to a RestVerticle.
+
+```
+#!groovy
+
+        Vertx vertx = Vertx.vertx()
+
+        Converter converter = new ObjectMapperConverter()
+
+        EventSender eventSender = new VertxEventSender(vertx, converter)
+        EventConsumer eventConsumer = new VertxEventConsumer(vertx, converter)
+
+        GlueBuilder glueBuilder = new GlueBuilder(eventSender, eventConsumer)
+
+        DefaultUserService defaultUserService = new DefaultUserService()
+
+        Verticle userVerticle = glueBuilder.createVerticle(UserService, defaultUserService)
+        UserService remoteUserService = glueBuilder.createRemote(UserService)
+
+        UserRestVerticle userRestVerticle = new UserRestVerticle(remoteUserService, converter)
+
+        vertx.deployVerticle(userVerticle)
+        vertx.deployVerticle(userRestVerticle)
+
+```
+
+
 ## RouteBuilder ##
 
 ### Goal ###
