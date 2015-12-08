@@ -29,7 +29,7 @@ class Starter {
 
     public static void main(String[] args) {
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("didditVle")
+        MongoDatabase mongoDatabase = mongoClient.getDatabase("glue")
         Vertx vertx = Vertx.vertx()
 
         Converter converter = new ObjectMapperConverter()

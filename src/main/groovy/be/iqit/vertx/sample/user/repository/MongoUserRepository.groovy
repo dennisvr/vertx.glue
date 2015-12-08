@@ -5,6 +5,7 @@ import be.iqit.vertx.glue.convert.FactoryConverter
 import be.iqit.vertx.glue.mongo.MongoRepository
 import be.iqit.vertx.sample.domain.User
 import com.mongodb.client.model.Filters
+import org.bson.Document
 import rx.Observable
 
 /**
@@ -40,5 +41,15 @@ class MongoUserRepository implements UserRepository {
                     Filters.eq('password',password)
                 )
         ), User)
+    }
+
+    @Override
+    Observable<User> saveUser(User user) {
+        converter.convert(user, Document).flatMap({ document ->
+            return repository.save(document)
+        }).map({
+            return user
+        })
+
     }
 }

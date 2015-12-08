@@ -28,7 +28,7 @@ class DefaultUserService implements UserService {
 
     @Override
     Observable<User> saveUser(User user) {
-        return Observable.just(user)
+        return userRepository.saveUser(user)
     }
 
     @Override

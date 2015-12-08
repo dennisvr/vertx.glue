@@ -12,4 +12,6 @@ public interface MongoRepository {
     Observable<Document> find();
 
     Observable<Document> find(Bson filter);
+
+    Observable<Void> save(Document document);
 }

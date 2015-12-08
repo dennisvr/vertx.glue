@@ -13,4 +13,6 @@ interface UserRepository {
     Observable<User> getUsers()
 
     Observable<User> getUserWithEmailAndPassword(String email, String password)
+
+    Observable<User> saveUser(User user)
 }
