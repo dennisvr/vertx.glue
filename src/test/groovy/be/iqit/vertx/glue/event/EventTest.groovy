@@ -15,12 +15,13 @@ class EventTest extends Specification {
         given:
         Vertx vertx = Vertx.vertx()
         Converter converter = new ObjectMapperConverter()
-        VertxEventSender eventSender = new VertxEventSender(TestService, converter, vertx)
-        EventVerticle eventVerticle = new EventVerticle(TestService, new DefaultTestService(), converter)
+        VertxEventSender eventSender = new VertxEventSender(vertx, converter)
+        VertxEventConsumer eventConsumer = new VertxEventConsumer(vertx, converter)
+        EventVerticle eventVerticle = new EventVerticle(eventConsumer, TestService, new DefaultTestService())
         vertx.deployVerticle(eventVerticle)
 
         when:
-        Integer result = eventSender.send("foo", Integer, "32", 10).toBlocking().first()
+        Integer result = eventSender.send(TestService, "foo", Integer, "32", 10).toBlocking().first()
 
         then:
         result == 42
@@ -31,12 +32,13 @@ class EventTest extends Specification {
         given:
         Vertx vertx = Vertx.vertx()
         Converter converter = new ObjectMapperConverter()
-        VertxEventSender eventSender = new VertxEventSender(TestService, converter, vertx)
-        EventVerticle eventVerticle = new EventVerticle(TestService, new DefaultTestService(), converter)
+        VertxEventSender eventSender = new VertxEventSender(vertx, converter)
+        VertxEventConsumer eventConsumer = new VertxEventConsumer(vertx, converter)
+        EventVerticle eventVerticle = new EventVerticle(eventConsumer, TestService, new DefaultTestService())
         vertx.deployVerticle(eventVerticle)
 
         when:
-        String result = eventBuilder.send("throwError", Integer).onErrorReturn(new Func1<Throwable, String>() {
+        String result = eventSender.send(TestService, "throwError", Integer).onErrorReturn(new Func1<Throwable, String>() {
             @Override
             String call(Throwable throwable) {
                 return throwable.message

@@ -2,6 +2,8 @@ package be.iqit.vertx.sample.user
 
 import be.iqit.vertx.glue.event.EventVerticle
 import be.iqit.vertx.glue.GlueBuilder
+import be.iqit.vertx.glue.event.VertxEventConsumer
+import be.iqit.vertx.glue.event.VertxEventSender
 import be.iqit.vertx.sample.domain.User
 import be.iqit.vertx.sample.rest.UserRestVerticle
 import be.iqit.vertx.sample.user.repository.MongoUserRepository
@@ -52,9 +54,12 @@ class UserTest extends Specification {
         converter = new ObjectMapperConverter()
         mongoRepository = Mock(MongoRepository)
         userRepository = new MongoUserRepository(mongoRepository, converter)
-        remoteUserService = new GlueBuilder(vertx, converter).createRemote(UserService)
+        VertxEventSender eventSender = new VertxEventSender(vertx, converter)
+        VertxEventConsumer eventConsumer = new VertxEventConsumer(vertx, converter)
+        GlueBuilder glueBuilder = new GlueBuilder(eventSender, eventConsumer)
+        remoteUserService = glueBuilder.createRemote(UserService)
         defaultUserService = new DefaultUserService(userRepository)
-        eventVerticle = new EventVerticle(UserService, defaultUserService, converter)
+        eventVerticle = glueBuilder.createVerticle(UserService, defaultUserService)
         userRestVerticle = new UserRestVerticle(remoteUserService, converter)
         vertx.deployVerticle(eventVerticle)
         vertx.deployVerticle(userRestVerticle)
