@@ -134,4 +134,17 @@ class RouteBuilder {
         return converter.convert(converter.convert(e, clazz), JsonNode)
     }
 
+    public RouteBuilder authorize(Closure<Observable<Boolean>> closure) {
+        this.route.handler(new Handler<RoutingContext>() {
+            @Override
+            void handle(RoutingContext routingContext) {
+                Observable.zip(closure.parameterTypes.collect { converter.convert(routingContext, it) }, { arguments ->
+                    return arguments
+                } as FuncN).flatMap({ arguments ->
+                    closure.call( *arguments )
+                }).subscribe(observe(routingContext))
+            }
+        })
+        return this
+    }
 }
