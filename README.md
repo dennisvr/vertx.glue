@@ -6,7 +6,7 @@ vertx.glue offers a few lightweight concepts to facilitate the development of ve
 
 ## GlueBuilder ##
 
-Given an interface and it's implementation, GlueBuilder creates a Verticle for the implementation and a Remote implementation.
+Given an interface and it's implementation, GlueBuilder creates a Verticle for the implementation and a Remote implementation to interact with the Verticle.
 
 In this example we have a UserService interface with a DefaultUserService implementation. With GlueBuilder we create a Verticle and a Remote implementation of the UserService to communicate with the Verticle. We pass the remote implementation to a RestVerticle.
 
