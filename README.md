@@ -64,18 +64,21 @@ class UserRestVerticle extends AbstractRestVerticle {
         get("/users/:id")
                 .withResponse(UserDTO)
                 .withError(ErrorDTO)
+                .authorize(Authorization.IS_USER)
                 .handle { UserFilter filter ->
                     return userService.getUser(filter.id)
                 }
 
         get("/users")
                 .withResponse(UserDTO)
+                .authorize(Authorization.IS_USER)
                 .handle { UserFilter filter ->
                     return userService.getUsers()
                 }
 
         post("/users/:id")
                 .withResponse(UserDTO)
+                .authorize(Authorization.IS_ADMIN)
                 .handle(userService.&saveUser)
 
     }
