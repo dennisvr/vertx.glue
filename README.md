@@ -88,7 +88,7 @@ class UserRestVerticle extends AbstractRestVerticle {
 ## Converter ##
 
 ### Goal ###
-Provide Observable methods for converting objects from and to other representations. Typically used to convert from and to JSON but supports conversion from and to any object.
+Provide Observable methods for converting objects from and to other representations. Typically used to convert from and to JSON but supports conversion from and to any object if an implementation is present. 
 
 ### Example ###
 
@@ -106,5 +106,16 @@ Provide Observable methods for converting objects from and to other representati
         domain != null
         domain.id == 1
         domain.name == 'test'
+    }
+```
+
+Wrapping a Converter implementation in a FactoryConverter allows to register new Converters. FactoryConverter will search for the most suitable converter when no specific converter is found.
+
+```
+#!groovy
+
+    public LoginRestVerticle(LoginService loginService, Converter converter) {
+        this.converter = new FactoryConverter(converter)
+        this.converter.withConverter(RoutingContext, LoginCommand, new RoutingContextBodyConverter(this.converter))
     }
 ```
