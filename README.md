@@ -109,7 +109,7 @@ Provide Observable methods for converting objects from and to other representati
     }
 ```
 
-Wrapping a Converter implementation in a FactoryConverter allows to register new Converters. FactoryConverter will search for the most suitable converter when no specific converter is found.
+Wrapping a Converter implementation in a FactoryConverter allows to register new Converters. FactoryConverter will search for a suitable converter when no specific converter is found. If no suitable converter is found FactoryConverter will delegate to the underlying converter.
 
 ```
 #!groovy
