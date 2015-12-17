@@ -37,6 +37,8 @@ class RouteBuilder {
     Class responseClass = String
     Class errorClass = Throwable
 
+    List<Closure<Observable<Boolean>>> authorizationChain = []
+
     public RouteBuilder(Router router, Converter converter) {
         this.converter = converter
         this.router  = router;
@@ -62,11 +64,6 @@ class RouteBuilder {
         return this
     }
 
-    public RouteBuilder handle(Handler<RoutingContext> handler) {
-        this.route.handler(handler)
-        return this
-    }
-
     public RouteBuilder withConverter(Converter converter) {
         this.converter = converter
         return this
@@ -83,16 +80,25 @@ class RouteBuilder {
     }
 
     public <E> E handle(Closure<E> closure) {
-        this.route.handler(new Handler<RoutingContext>() {
+       this.route.handler(new Handler<RoutingContext>() {
             @Override
             void handle(RoutingContext routingContext) {
-                Observable.zip(closure.parameterTypes.collect { converter.convert(routingContext, it) }, { arguments ->
-                    return arguments
-                } as FuncN).flatMap({ arguments ->
-                    closure.call( *arguments )
+
+                Observable.from(authorizationChain).flatMap({ authorizationClosure ->
+                    invoke(routingContext, authorizationClosure)
+                }).toList().flatMap({
+                    invoke(routingContext, closure)
                 }).flatMap(toJson(responseClass))
                         .subscribe(observe(routingContext))
             }
+        })
+    }
+
+    protected <E> Observable<E> invoke(RoutingContext routingContext, Closure<Observable<E>> closure) {
+        Observable.zip(closure.parameterTypes.collect { converter.convert(routingContext, it) }, { arguments ->
+            return arguments
+        } as FuncN).flatMap({ arguments ->
+            closure.call( *arguments )
         })
     }
 
@@ -147,16 +153,7 @@ class RouteBuilder {
     }
 
     public RouteBuilder authorize(Closure<Observable<Boolean>> closure) {
-        this.route.handler(new Handler<RoutingContext>() {
-            @Override
-            void handle(RoutingContext routingContext) {
-                Observable.zip(closure.parameterTypes.collect { converter.convert(routingContext, it) }, { arguments ->
-                    return arguments
-                } as FuncN).flatMap({ arguments ->
-                    closure.call( *arguments )
-                }).subscribe(observe(routingContext))
-            }
-        })
+        authorizationChain << closure
         return this
     }
 }
