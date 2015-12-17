@@ -1,6 +1,7 @@
 package be.iqit.vertx.glue.convert
 
 import com.fasterxml.jackson.databind.JsonNode
+import rx.Observable
 import spock.lang.Specification
 
 /**
@@ -116,6 +117,41 @@ class ConverterTest extends Specification {
 
         then:
         result == '{"message":"some exception"}'
+    }
 
+    def "can up cast"() {
+        given:
+        TestDomainA2 a2 = new TestDomainA2(id:1, name:"A2")
+
+        when:
+        Object result = converter.convert(a2, TestDomainA).toBlocking().first()
+
+        then:
+        result instanceof TestDomainA
+        result.id == 1
+        result.name == "A2"
+    }
+
+    def "uses super converter when possible"() {
+        given:
+        TestDomainA2 a2 = new TestDomainA2(id:1, name:"A2")
+        converter.withConverter(TestDomainA, TestDomainB, new Converter() {
+            @Override
+            Observable convert(Observable object, Class clazz) {
+                return Observable.just("OK")
+            }
+
+            @Override
+            Observable convert(Object object, Class clazz) {
+                return Observable.just("OK")
+            }
+        })
+
+        when:
+        Object result = converter.convert(a2, TestDomainB).toBlocking().first()
+
+        then:
+        result instanceof String
+        result == "OK"
     }
 }
