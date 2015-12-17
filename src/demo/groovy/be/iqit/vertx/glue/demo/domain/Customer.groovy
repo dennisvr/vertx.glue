@@ -10,25 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.rest
-
-import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.convert.DelegatingConverter
-import io.vertx.ext.web.RoutingContext
-import rx.Observable
+package be.iqit.vertx.glue.demo.domain
 
 /**
- * Created by dvanroeyen on 07/12/15.
+ * Created by dvanroeyen on 06/12/15.
  */
-class RoutingContextBodyConverter<O> extends DelegatingConverter<RoutingContext, O> {
+class Customer {
 
-    RoutingContextBodyConverter(Converter converter) {
-        super(converter)
-    }
-
-    @Override
-    Observable<O> convert(RoutingContext routingContext, Class<O> clazz) {
-        return converter.convert(routingContext.getBodyAsString(), clazz)
-    }
-
+    CustomerId id
+    String name
 }

@@ -10,31 +10,36 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.rest
+package be.iqit.vertx.glue.demo.service
 
-import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.convert.DelegatingConverter
-import io.vertx.core.MultiMap
-import io.vertx.ext.web.RoutingContext
+import be.iqit.vertx.glue.demo.domain.User
+import io.vertx.ext.web.Session
 import rx.Observable
 
 /**
  * Created by dvanroeyen on 07/12/15.
  */
-class RoutingContextParamsConverter<O> extends DelegatingConverter<RoutingContext, O> {
+class DefaultLoginService implements LoginService {
 
-    RoutingContextParamsConverter(Converter converter) {
-        super(converter)
+    UserService userService
+
+    public DefaultLoginService(UserService userService) {
+        this.userService = userService
     }
 
     @Override
-    Observable<O> convert(RoutingContext object, Class<O> clazz) {
-        return converter.convert(toMap(object.request().params()), clazz)
+    Observable<User> login(Session session, String email, String password) {
+        return userService.getUserWithEmailAndPassword(email, password).doOnNext({ user ->
+            session.data().user = user
+        })
     }
 
-    private Map<String, Object> toMap(MultiMap multiMap) {
-        def Map<String, Object> map = [:]
-        multiMap.each { map.put(it.key, it.value)}
-        return map
+    @Override
+    Observable<Boolean> logout(Session session) {
+        return Observable.just(session).map({ s ->
+            s.destroy()
+        }).map({
+            return true
+        })
     }
 }

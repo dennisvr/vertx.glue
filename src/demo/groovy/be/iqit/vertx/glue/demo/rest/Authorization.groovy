@@ -10,25 +10,29 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.rest
+package be.iqit.vertx.glue.demo.rest
 
-import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.convert.DelegatingConverter
-import io.vertx.ext.web.RoutingContext
+import be.iqit.vertx.glue.rest.UnauthorizedException
+import io.vertx.ext.web.Session
 import rx.Observable
 
 /**
- * Created by dvanroeyen on 07/12/15.
+ * Created by dvanroeyen on 08/12/15.
  */
-class RoutingContextBodyConverter<O> extends DelegatingConverter<RoutingContext, O> {
+class Authorization {
 
-    RoutingContextBodyConverter(Converter converter) {
-        super(converter)
+    static Closure<Observable<Boolean>> IS_USER = { Session session ->
+        if(session.data().user == null) {
+            Observable.error(new UnauthorizedException("Not logged in"))
+        }
+        Observable.just(true)
     }
 
-    @Override
-    Observable<O> convert(RoutingContext routingContext, Class<O> clazz) {
-        return converter.convert(routingContext.getBodyAsString(), clazz)
-    }
 
+    static Closure<Observable<Boolean>> IS_ADMIN= { Session session ->
+        if(session.data()?.user?.admin) {
+            Observable.error(new UnauthorizedException("Not admin"))
+        }
+        Observable.just(true)
+    }
 }

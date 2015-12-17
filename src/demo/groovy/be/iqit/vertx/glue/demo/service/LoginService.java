@@ -10,25 +10,18 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.rest
+package be.iqit.vertx.glue.demo.service;
 
-import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.convert.DelegatingConverter
-import io.vertx.ext.web.RoutingContext
-import rx.Observable
+import be.iqit.vertx.glue.demo.domain.User;
+import io.vertx.ext.web.Session;
+import rx.Observable;
 
 /**
- * Created by dvanroeyen on 07/12/15.
+ * Created by dvanroeyen on 06/12/15.
  */
-class RoutingContextBodyConverter<O> extends DelegatingConverter<RoutingContext, O> {
+public interface LoginService {
 
-    RoutingContextBodyConverter(Converter converter) {
-        super(converter)
-    }
+    Observable<User> login(Session session, String user, String password);
 
-    @Override
-    Observable<O> convert(RoutingContext routingContext, Class<O> clazz) {
-        return converter.convert(routingContext.getBodyAsString(), clazz)
-    }
-
+    Observable<Boolean> logout(Session session);
 }

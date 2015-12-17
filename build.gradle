@@ -1,13 +1,33 @@
+plugins {
+    id 'net.researchgate.release' version '2.3.4'
+}
+
 group 'be.iqit'
-version '1.0-SNAPSHOT'
+version '1.0.0-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'net.researchgate.release'
+
 
 sourceCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
+}
+
+release {
+
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ["src/main/groovy", "src/demo/groovy"]
+        }
+    }
 }
 
 dependencies {
