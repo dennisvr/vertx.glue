@@ -9,7 +9,8 @@ import spock.lang.Specification
  */
 class ConverterTest extends Specification {
 
-    FactoryConverter converter = new FactoryConverter().withDefaultConverter(new ObjectMapperConverter())
+    ObjectMapperConverter rootConverter = new ObjectMapperConverter()
+    FactoryConverter converter = new FactoryConverter().withDefaultConverter(rootConverter)
 
     def "can convert to String"() {
         given:
@@ -153,5 +154,25 @@ class ConverterTest extends Specification {
         then:
         result instanceof String
         result == "OK"
+    }
+
+    def "can convert exception and back"() {
+        given:
+        converter
+                .withConverter(Throwable, String, new ThrowableToStringConverter(rootConverter))
+                .withConverter(String, Throwable, new StringToThrowableConverter(rootConverter))
+
+        IllegalArgumentException exception = new IllegalArgumentException("test")
+
+
+        when:
+        Throwable result = converter.convert(exception, String).flatMap({ String value ->
+            return converter.convert(value, Throwable)
+        }).toBlocking().first()
+
+        then:
+        result instanceof IllegalArgumentException
+        result.printStackTrace()
+        result.message == "test"
     }
 }

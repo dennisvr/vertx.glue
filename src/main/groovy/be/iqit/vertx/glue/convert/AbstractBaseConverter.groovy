@@ -41,7 +41,7 @@ abstract class AbstractBaseConverter<I,O> extends AbstractConverter<I,O> {
             }
             return doConvert(object, clazz)
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Could not convert ${object.getClass()} to ${clazz}")
+            throw new IllegalArgumentException("Could not convert ${object.getClass()} to ${clazz}", e)
         }
     }
 

@@ -10,10 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.service
+package be.iqit.vertx.glue.common.service
 
-import be.iqit.vertx.glue.demo.repository.UserRepository
-import be.iqit.vertx.glue.demo.domain.User
+import be.iqit.vertx.glue.common.repository.UserRepository
+import be.iqit.vertx.glue.common.domain.User
+import be.iqit.vertx.glue.paging.Page
 import rx.Observable
 
 /**
@@ -40,6 +41,12 @@ class DefaultUserService implements UserService {
 
     @Override
     Observable<User> saveUser(User user) {
+        if(user.id==null) {
+            user.id = UUID.randomUUID().toString()
+        }
+        if(user.login==null) {
+            user.login = user.email
+        }
         return userRepository.saveUser(user)
     }
 
@@ -49,7 +56,19 @@ class DefaultUserService implements UserService {
     }
 
     @Override
+    Observable<Page<User>> getUserPage() {
+        return userRepository.getUsers().toList().map({ users ->
+            return new Page(users, 0, 0, users.size())
+        })
+    }
+
+    @Override
     Observable<User> getUserWithEmailAndPassword(String email, String password) {
         return this.userRepository.getUserWithEmailAndPassword(email, password)
+    }
+
+    @Override
+    Observable<User> findWithEmail(String email) {
+        return this.userRepository.findWithEmail(email)
     }
 }

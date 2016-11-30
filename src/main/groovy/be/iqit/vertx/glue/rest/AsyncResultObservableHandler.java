@@ -12,6 +12,7 @@
  */
 package be.iqit.vertx.glue.rest;
 
+import be.iqit.vertx.glue.convert.Converter;
 import groovy.transform.TypeChecked;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -26,9 +27,11 @@ import rx.Subscriber;
 public class AsyncResultObservableHandler<E> implements Handler<AsyncResult<E>> {
 
     private final Observable<E> observable;
+    private final Converter converter;
     private Subscriber<? super E> subscriber;
 
-    public AsyncResultObservableHandler() {
+    public AsyncResultObservableHandler(Converter converter) {
+        this.converter = converter;
         this.observable = Observable.create( new Observable.OnSubscribe<E>() {
             @Override
             public void call(Subscriber<? super E> subscriber) {
@@ -44,7 +47,8 @@ public class AsyncResultObservableHandler<E> implements Handler<AsyncResult<E>> 
     @Override
     public void handle(AsyncResult<E> event) {
         if(event.failed()) {
-            this.subscriber.onError(event.cause());
+            Throwable throwable = (Throwable) this.converter.convert(event.cause().getMessage(), Throwable.class).toBlocking().first();
+            this.subscriber.onError(throwable);
         } else {
             this.subscriber.onNext(event.result());
         }

@@ -16,9 +16,9 @@ import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.rest.AbstractRestVerticle
 import be.iqit.vertx.glue.rest.ErrorDTO
 import be.iqit.vertx.glue.rest.RoutingContextBodyConverter
-import be.iqit.vertx.glue.demo.rest.command.LoginCommand
-import be.iqit.vertx.glue.demo.service.LoginService
-import be.iqit.vertx.glue.demo.dto.UserDTO
+import be.iqit.vertx.glue.common.rest.command.LoginCommand
+import be.iqit.vertx.glue.common.service.LoginService
+import be.iqit.vertx.glue.common.dto.UserDTO
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.Session
 

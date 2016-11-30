@@ -10,14 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.repository
+package be.iqit.vertx.glue.common.repository
 
-import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.convert.FactoryConverter
-import be.iqit.vertx.glue.mongo.MongoRepository
-import be.iqit.vertx.glue.demo.domain.User
+import be.iqit.vertx.glue.mongo.Repository
+import be.iqit.vertx.glue.common.domain.User
 import com.mongodb.client.model.Filters
-import org.bson.Document
 import rx.Observable
 
 /**
@@ -25,43 +22,47 @@ import rx.Observable
  */
 class MongoUserRepository implements UserRepository {
 
-    MongoRepository repository
-    FactoryConverter converter
+    Repository<User> repository
 
-    public MongoUserRepository(MongoRepository repository, Converter converter ) {
+    public MongoUserRepository(Repository<User> repository ) {
         this.repository = repository
-        this.converter = new FactoryConverter()
-                .withDefaultConverter(converter)
-              //  .withConverter(Document, String, new DocumentConverter())
     }
 
     @Override
     Observable<User> getUser(String id) {
-        return converter.convert(repository.find(Filters.eq('id', id)), User)
+        return repository.find(Filters.eq('id', id))
     }
 
     @Override
     Observable<User> getUsers() {
-        return converter.convert(repository.find(), User)
+        return repository.find()
     }
 
     @Override
     Observable<User> getUserWithEmailAndPassword(String email, String password) {
-        return converter.convert(repository.find(
+        return repository.find(
                 Filters.and(
                     Filters.eq('email',email),
                     Filters.eq('password',password)
                 )
-        ), User)
+        ).defaultIfEmpty(null)
+    }
+
+    @Override
+    Observable<User> findWithEmail(String email) {
+        return repository.find(
+                Filters.and(
+                        Filters.eq('email',email),
+                )
+        ).defaultIfEmpty(null)
     }
 
     @Override
     Observable<User> saveUser(User user) {
-        converter.convert(user, Document).flatMap({ document ->
-            return repository.save(document)
-        }).map({
-            return user
-        })
+            return repository.save(user)
+                    .map({
+                return user
+            })
 
     }
 }

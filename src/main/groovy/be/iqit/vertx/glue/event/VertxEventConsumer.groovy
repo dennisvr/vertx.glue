@@ -14,14 +14,12 @@ package be.iqit.vertx.glue.event
 
 import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.convert.FactoryConverter
-import be.iqit.vertx.glue.rest.AsyncResultObservableHandler
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
+import be.iqit.vertx.glue.convert.StringToThrowableConverter
+import be.iqit.vertx.glue.convert.ThrowableToStringConverter
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.Message
 import org.codehaus.groovy.runtime.MethodClosure
-import rx.Observable
 import rx.Observer
 
 /**
@@ -36,6 +34,8 @@ class VertxEventConsumer implements EventConsumer{
         this.vertx = vertx
         this.converter = new FactoryConverter().withDefaultConverter(converter)
         this.converter.withConverter(EventRequest,List,new EventRequestConverter(this.converter))
+//               .withConverter(Throwable, String, new ThrowableToStringConverter(this.converter))
+//                .withConverter(String, Throwable, new StringToThrowableConverter(this.converter))
     }
 
     public <E> void consume(Class<E> interfaceClass, MethodClosure method) {
@@ -56,7 +56,25 @@ class VertxEventConsumer implements EventConsumer{
                     @Override
                     void onError(Throwable e) {
                         e.printStackTrace()
-                        event.fail(500, e.message)
+                        //event.reply(e)
+                        converter.convert(e, String).subscribe(new Observer<String>() {
+                            @Override
+                            void onCompleted() {
+
+                            }
+
+                            @Override
+                            void onError(Throwable t) {
+                                e.printStackTrace()
+                                event.fail(502, e.message)
+                            }
+
+                            @Override
+                            void onNext(String s) {
+                                event.fail(500,s)
+                            }
+                        })
+
                     }
 
                     @Override

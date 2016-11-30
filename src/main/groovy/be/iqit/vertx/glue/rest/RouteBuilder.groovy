@@ -36,6 +36,7 @@ class RouteBuilder {
 
     Class responseClass = String
     Class errorClass = Throwable
+    Map<Class<? extends  Throwable>, Integer> statusMap = new HashMap<>()
 
     List<Closure<Observable<Boolean>>> authorizationChain = []
 
@@ -79,8 +80,13 @@ class RouteBuilder {
         return this
     }
 
+    public <T extends Throwable,E> RouteBuilder withError(Class<T> throwableClass, int status) {
+        this.statusMap.put(throwableClass, status)
+        return this
+    }
+
     public <E> E handle(Closure<E> closure) {
-       this.route.handler(new Handler<RoutingContext>() {
+       this.route.blockingHandler(new Handler<RoutingContext>() {
             @Override
             void handle(RoutingContext routingContext) {
 
@@ -111,13 +117,17 @@ class RouteBuilder {
 
             @Override
             void onError(Throwable e) {
+                Integer status = statusMap.get(e.class)
+                if(!status) {
+                    status = 500
+                }
                 e.printStackTrace()
                 String error = e.getMessage()
                 HttpServerResponse response = routingContext.response()
                 try {
                     response.setChunked(true)
                     response.putHeader("content-type", "application/json")
-                    response.setStatusCode(404)
+                    response.setStatusCode(status)
                     error = converter.convert(converter.convert(e, errorClass), String).toBlocking().first()
                 } catch(all) {
                     all.printStackTrace()

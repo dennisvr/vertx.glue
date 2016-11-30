@@ -10,16 +10,12 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.domain
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+package be.iqit.vertx.glue.common.domain
 
 /**
- * Created by dvanroeyen on 30/11/15.
+ * Created by dvanroeyen on 01/12/15.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-class User {
+class UserFilter {
 
     String id
-
 }

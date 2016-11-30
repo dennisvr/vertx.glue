@@ -10,21 +10,18 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.service
+package be.iqit.vertx.glue.common.service;
 
-import be.iqit.vertx.glue.demo.domain.User
-import rx.Observable
+import be.iqit.vertx.glue.common.domain.User;
+import io.vertx.ext.web.Session;
+import rx.Observable;
 
 /**
- * Created by dvanroeyen on 30/11/15.
+ * Created by dvanroeyen on 06/12/15.
  */
-interface UserService {
+public interface LoginService {
 
-    Observable<User> getUser(String id)
+    Observable<User> login(Session session, String user, String password);
 
-    Observable<User> saveUser(User user)
-
-    Observable<List<User>> getUsers()
-
-    Observable<User> getUserWithEmailAndPassword(String email, String password)
+    Observable<Boolean> logout(Session session);
 }

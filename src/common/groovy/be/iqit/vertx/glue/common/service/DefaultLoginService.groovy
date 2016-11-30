@@ -10,9 +10,9 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.service
+package be.iqit.vertx.glue.common.service
 
-import be.iqit.vertx.glue.demo.domain.User
+import be.iqit.vertx.glue.common.domain.User
 import io.vertx.ext.web.Session
 import rx.Observable
 

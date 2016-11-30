@@ -10,13 +10,20 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.rest.command
+package be.iqit.vertx.glue.common.domain
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 /**
- * Created by dvanroeyen on 07/12/15.
+ * Created by dvanroeyen on 30/11/15.
  */
-class LoginCommand {
+@JsonIgnoreProperties(ignoreUnknown = true)
+class User {
 
+    String id
+    String name
+    String login
     String email
     String password
+
 }

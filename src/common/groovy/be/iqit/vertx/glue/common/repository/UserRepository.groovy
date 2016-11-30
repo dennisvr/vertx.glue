@@ -10,20 +10,23 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.mongo;
+package be.iqit.vertx.glue.common.repository
 
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import rx.Observable;
+import be.iqit.vertx.glue.common.domain.User
+import rx.Observable
 
 /**
- * Created by dvanroeyen on 06/12/15.
+ * Created by dvanroeyen on 30/11/15.
  */
-public interface MongoRepository {
+interface UserRepository {
 
-    Observable<Document> find();
+    Observable<User> getUser(String id)
 
-    Observable<Document> find(Bson filter);
+    Observable<User> getUsers()
 
-    Observable<Void> save(Document document);
+    Observable<User> getUserWithEmailAndPassword(String email, String password)
+
+    Observable<User> findWithEmail(String email)
+
+    Observable<User> saveUser(User user)
 }

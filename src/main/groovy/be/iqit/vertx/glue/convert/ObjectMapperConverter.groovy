@@ -12,6 +12,7 @@
  */
 package be.iqit.vertx.glue.convert
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import rx.Observable
@@ -29,6 +30,7 @@ class ObjectMapperConverter<I,O>  extends AbstractBaseConverter<I,O> {
 
     public ObjectMapperConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper
+        this.objectMapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Override

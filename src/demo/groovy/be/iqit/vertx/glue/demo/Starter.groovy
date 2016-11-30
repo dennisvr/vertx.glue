@@ -12,6 +12,7 @@
  */
 package be.iqit.vertx.glue.demo
 
+import be.iqit.vertx.glue.common.domain.User
 import be.iqit.vertx.glue.event.EventConsumer
 import be.iqit.vertx.glue.event.EventSender
 import be.iqit.vertx.glue.event.VertxEventConsumer
@@ -19,19 +20,19 @@ import be.iqit.vertx.glue.event.VertxEventSender
 import be.iqit.vertx.glue.event.EventVerticle
 import be.iqit.vertx.glue.GlueBuilder
 import be.iqit.vertx.glue.demo.rest.LoginRestVerticle
-import be.iqit.vertx.glue.demo.service.DefaultLoginService
-import be.iqit.vertx.glue.demo.repository.UserRepository
-import be.iqit.vertx.glue.demo.service.DefaultUserService
-import be.iqit.vertx.glue.demo.repository.MongoUserRepository
-import be.iqit.vertx.glue.demo.service.UserService
+import be.iqit.vertx.glue.common.service.DefaultLoginService
+import be.iqit.vertx.glue.common.repository.UserRepository
+import be.iqit.vertx.glue.common.service.DefaultUserService
+import be.iqit.vertx.glue.common.repository.MongoUserRepository
+import be.iqit.vertx.glue.common.service.UserService
 import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.convert.ObjectMapperConverter
-import be.iqit.vertx.glue.mongo.DefaultMongoRepository
 import be.iqit.vertx.glue.mongo.MongoRepository
+import be.iqit.vertx.glue.mongo.Repository
 import be.iqit.vertx.glue.demo.rest.UserRestVerticle
-import com.mongodb.async.client.MongoClient
-import com.mongodb.async.client.MongoClients
-import com.mongodb.async.client.MongoDatabase
+import com.mongodb.rx.client.MongoClient
+import com.mongodb.rx.client.MongoClients
+import com.mongodb.rx.client.MongoDatabase
 import io.vertx.core.Vertx
 
 /**
@@ -51,8 +52,8 @@ class Starter {
 
         GlueBuilder glueBuilder = new GlueBuilder(eventSender, eventConsumer)
 
-        MongoRepository mongoRepository = new DefaultMongoRepository(mongoDatabase.getCollection("users"))
-        UserRepository userRepository = new MongoUserRepository(mongoRepository, converter)
+        Repository mongoRepository = new MongoRepository(mongoDatabase.getCollection("users", User))
+        UserRepository userRepository = new MongoUserRepository(mongoRepository)
         DefaultUserService defaultUserService = new DefaultUserService(userRepository)
 
         UserService remoteUserService = glueBuilder.createRemote(UserService)

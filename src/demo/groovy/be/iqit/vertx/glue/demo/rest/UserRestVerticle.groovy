@@ -16,23 +16,25 @@ import be.iqit.vertx.glue.rest.AbstractRestVerticle
 import be.iqit.vertx.glue.rest.ErrorDTO
 import be.iqit.vertx.glue.rest.RoutingContextBodyConverter
 import be.iqit.vertx.glue.rest.RoutingContextParamsConverter
-import be.iqit.vertx.glue.demo.domain.User
-import be.iqit.vertx.glue.demo.dto.UserDTO
-import be.iqit.vertx.glue.demo.service.UserService
+import be.iqit.vertx.glue.common.domain.User
+import be.iqit.vertx.glue.common.dto.UserDTO
+import be.iqit.vertx.glue.common.service.UserService
 import be.iqit.vertx.glue.convert.Converter
-import be.iqit.vertx.glue.demo.domain.UserFilter
+import be.iqit.vertx.glue.common.domain.UserFilter
+import groovy.transform.TypeChecked
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.Session
 
 /**
  * Created by dvanroeyen on 01/12/15.
  */
+@TypeChecked
 class UserRestVerticle extends AbstractRestVerticle {
 
     UserService userService
 
     public UserRestVerticle(UserService userService, Converter converter) {
-        super(7070, converter)
+        super(7072, converter)
         this.userService = userService
         this.converter.withConverter(RoutingContext, UserFilter, new RoutingContextParamsConverter(this.converter))
         this.converter.withConverter(RoutingContext, User, new RoutingContextBodyConverter(this.converter))

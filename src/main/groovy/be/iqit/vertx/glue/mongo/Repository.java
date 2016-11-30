@@ -10,21 +10,29 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.repository
+package be.iqit.vertx.glue.mongo;
 
-import be.iqit.vertx.glue.demo.domain.User
-import rx.Observable
+import be.iqit.vertx.glue.paging.Page;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import rx.Observable;
+
+import java.util.List;
 
 /**
- * Created by dvanroeyen on 30/11/15.
+ * Created by dvanroeyen on 06/12/15.
  */
-interface UserRepository {
+public interface Repository<E> {
 
-    Observable<User> getUser(String id)
+    Observable<E> find();
 
-    Observable<User> getUsers()
+    Observable<E> find(Bson filter);
 
-    Observable<User> getUserWithEmailAndPassword(String email, String password)
+    Observable<Long> count(Bson filter);
 
-    Observable<User> saveUser(User user)
+    Observable<Page<E>> page(Bson filter, Integer offset, Integer limit);
+
+    Observable<Void> save(E document);
+
+    <A> Observable<List<A>> aggregate(Class<A> clazz, Bson... pipeline);
 }

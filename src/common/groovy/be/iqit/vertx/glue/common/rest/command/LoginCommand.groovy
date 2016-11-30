@@ -10,18 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package be.iqit.vertx.glue.demo.service;
-
-import be.iqit.vertx.glue.demo.domain.User;
-import io.vertx.ext.web.Session;
-import rx.Observable;
+package be.iqit.vertx.glue.common.rest.command
 
 /**
- * Created by dvanroeyen on 06/12/15.
+ * Created by dvanroeyen on 07/12/15.
  */
-public interface LoginService {
+class LoginCommand {
 
-    Observable<User> login(Session session, String user, String password);
-
-    Observable<Boolean> logout(Session session);
+    String email
+    String password
 }

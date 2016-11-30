@@ -37,8 +37,12 @@ class GlueBuilder {
         def map = [:]
 
         interfaceClass.methods.each() { method ->
+            Class returnType = method.returnType
+            if(rx.Observable.isAssignableFrom(returnType)) {
+                returnType = resolveClass(method.annotatedReturnType.type)
+            }
             map."${method.name}" = { Object[] args->
-                eventSender.send(interfaceClass, method.name, resolveClass(method.annotatedReturnType.type), *args)
+                eventSender.send(interfaceClass, method.name, returnType, *args)
             }
         }
 
@@ -47,9 +51,10 @@ class GlueBuilder {
 
     private Class resolveClass(def type) {
         try {
-            if (type.actualTypeArguments) {
+            if ((rx.Observable.isAssignableFrom(type.rawType)||Iterable.isAssignableFrom(type.rawType))&&type.actualTypeArguments) {
                 return resolveClass(type.actualTypeArguments[0])
             }
+            return type.rawType
         } catch (MissingPropertyException e) {
             // leaf, expected behaviour
         }

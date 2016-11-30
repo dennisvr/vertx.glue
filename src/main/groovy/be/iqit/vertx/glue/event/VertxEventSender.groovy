@@ -14,6 +14,8 @@ package be.iqit.vertx.glue.event
 
 import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.convert.FactoryConverter
+import be.iqit.vertx.glue.convert.StringToThrowableConverter
+import be.iqit.vertx.glue.convert.ThrowableToStringConverter
 import be.iqit.vertx.glue.rest.AsyncResultObservableHandler
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
@@ -33,7 +35,9 @@ class VertxEventSender implements EventSender {
     public VertxEventSender(Vertx vertx, Converter converter) {
         this.vertx = vertx
         this.converter = new FactoryConverter().withDefaultConverter(converter)
-        this.converter.withConverter(EventRequest,List,new EventRequestConverter(this.converter))
+//        this.converter.withConverter(EventRequest,List,new EventRequestConverter(this.converter))
+//                .withConverter(Throwable, String, new ThrowableToStringConverter(this.converter))
+//                .withConverter(String, Throwable, new StringToThrowableConverter(this.converter))
     }
 
     public <O> Observable<O> send(Class interfaceClass, String method, Class<O> clazz, Object...params) {
@@ -44,7 +48,7 @@ class VertxEventSender implements EventSender {
             }
             return message.toString()
         }).flatMap({ message ->
-            AsyncResultObservableHandler<Message> handler = new AsyncResultObservableHandler<>()
+            AsyncResultObservableHandler<Message> handler = new AsyncResultObservableHandler<>(this.converter)
             String address = "${interfaceClass.name}.${method}"
             vertx.eventBus().send(address, message , handler);
             return handler.asObservable().flatMap({ m ->
