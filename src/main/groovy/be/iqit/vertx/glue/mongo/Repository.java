@@ -30,6 +30,8 @@ public interface Repository<E> {
 
     Observable<Long> count(Bson filter);
 
+    Observable<Long> delete(Bson filter);
+
     Observable<Page<E>> page(Bson filter, Integer offset, Integer limit);
 
     Observable<Void> save(E document);

@@ -12,8 +12,8 @@
  */
 package be.iqit.vertx.glue.mongo
 
-import be.iqit.vertx.glue.convert.Converter
 import be.iqit.vertx.glue.paging.Page
+import com.mongodb.client.result.DeleteResult
 import com.mongodb.rx.client.MongoCollection
 import groovy.transform.TypeChecked
 import org.bson.conversions.Bson
@@ -28,17 +28,17 @@ class MongoRepository<E> implements Repository<E> {
 
     MongoCollection<E> collection
 
-    public MongoRepository(MongoCollection<E> collection) {
+    MongoRepository(MongoCollection<E> collection) {
         this.collection = collection
     }
 
-    public Observable<E> find() {
+    Observable<E> find() {
         collection
                 .find()
                 .toObservable()
     }
 
-    public Observable<E> find(Bson filter) {
+    Observable<E> find(Bson filter) {
         return collection
                 .find(filter)
                 .toObservable()
@@ -47,6 +47,13 @@ class MongoRepository<E> implements Repository<E> {
     @Override
     Observable<Long> count(Bson filter) {
         return collection.count(filter)
+    }
+
+    @Override
+    Observable<Long> delete(Bson filter) {
+        return collection
+                .deleteMany(filter)
+                .map({ DeleteResult deleteResult -> deleteResult.deletedCount })
     }
 
     @Override
@@ -64,11 +71,11 @@ class MongoRepository<E> implements Repository<E> {
         })
     }
 
-    public Observable<Void> save(E object) {
+    Observable<Void> save(E object) {
         collection.insertOne(object).asObservable().map({success -> null})
     }
 
-    public <A> Observable<List<A>> aggregate(Class<A> clazz, Bson... pipeline) {
+    def <A> Observable<List<A>> aggregate(Class<A> clazz, Bson... pipeline) {
         collection.aggregate(Arrays.asList(pipeline), clazz).toObservable().toList()
     }
 
