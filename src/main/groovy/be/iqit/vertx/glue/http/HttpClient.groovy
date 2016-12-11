@@ -1,4 +1,4 @@
-package be.iqit.bunchbill.http
+package be.iqit.vertx.glue.http
 
 import be.iqit.vertx.glue.convert.Converter
 import io.vertx.core.Vertx
@@ -10,22 +10,22 @@ import io.vertx.rxjava.core.http.HttpClientResponse
 /**
  * Created by dvanroeyen on 12/03/16.
  */
-class HttpClient {
+public class HttpClient {
 
     io.vertx.rxjava.core.http.HttpClient delegate
     Converter converter
     String sessionCookie
 
-    public HttpClient(Converter converter, HttpClientOptions options) {
+    HttpClient(Converter converter, HttpClientOptions options) {
         this.converter = converter
         this.delegate = new io.vertx.rxjava.core.http.HttpClient(Vertx.vertx().createHttpClient(options))
     }
 
-    public HttpClient(Converter converter, int port, String host) {
+    HttpClient(Converter converter, int port, String host) {
         this(converter, new HttpClientOptions().setDefaultPort(port).setDefaultHost(host))
     }
 
-    public rx.Observable<HttpClientResponse> get(String url) {
+    rx.Observable<HttpClientResponse> get(String url) {
         ObservableHandler observableHandler = new ObservableHandler<HttpClientResponse>(false)
         HttpClientRequest request = delegate.get(url, observableHandler.toHandler())
         request.chunked = true
@@ -42,7 +42,7 @@ class HttpClient {
         })
     }
 
-    public rx.Observable<HttpClientResponse> post(url, payload) {
+    rx.Observable<HttpClientResponse> post(url, payload) {
         ObservableHandler observableHandler = new ObservableHandler<HttpClientResponse>(false)
         HttpClientRequest request = delegate.post(url, observableHandler.toHandler())
         return converter.convert(payload, String.class).flatMap( { body ->
