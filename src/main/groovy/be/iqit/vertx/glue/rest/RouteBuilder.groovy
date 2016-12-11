@@ -85,6 +85,25 @@ class RouteBuilder {
         return this
     }
 
+    /**
+     * the closure handling the request.
+     *
+     * Closure arguments are automatically converted from RoutingContext using the provided Converter
+     * String arguments are resolved to the nth path parameter
+     *
+     * example:
+     * given: "/users/:id/:name"
+     * { Session session, String userId, Map parameters, String userName, User user -> }
+     * Will:
+     * - convert RoutingContext to Session
+     * - map the "id" parameter to userId (first path parameter)
+     * - convert RoutingContext to a Map
+     * - map the "name" parameter to userName (second path parameter)
+     * - map the RoutingContext to a User
+     *
+     * @param closure
+     * @return
+     */
     public <E> E handle(Closure<E> closure) {
        this.route.blockingHandler(new Handler<RoutingContext>() {
             @Override
@@ -101,11 +120,30 @@ class RouteBuilder {
     }
 
     protected <E> Observable<E> invoke(RoutingContext routingContext, Closure<Observable<E>> closure) {
-        Observable.zip(closure.parameterTypes.collect { converter.convert(routingContext, it) }, { arguments ->
+        int paramIndex = 0
+
+        List<String> paramNames  = getParameterNames(routingContext)
+
+        List<Observable<Object>> argumentObservables = closure.parameterTypes.collect {
+            if(it.isAssignableFrom(String)) {
+                String param = paramNames[paramIndex]
+                String value = routingContext.request().params().get(param)
+                paramIndex++
+                return Observable.just(value)
+            }
+            converter.convert(routingContext, it)
+        }
+        Observable.zip(argumentObservables , { arguments ->
             return arguments
         } as FuncN).flatMap({ arguments ->
             closure.call( *arguments )
         })
+    }
+
+    protected List<String> getParameterNames(RoutingContext routingContext) {
+        def matches = (routingContext.currentRoute().path =~ /:\w+/)
+        return matches.collect { String value -> value.substring(1) }
+
     }
 
     private Observer observe(RoutingContext routingContext) {
