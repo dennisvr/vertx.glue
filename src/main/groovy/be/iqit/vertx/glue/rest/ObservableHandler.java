@@ -25,12 +25,7 @@ public class ObservableHandler<E> implements Handler<E> {
     private Subscriber<? super E> subscriber;
 
     public ObservableHandler() {
-       this.observable = Observable.create( new Observable.OnSubscribe<E>() {
-           @Override
-           public void call(Subscriber<? super E> subscriber) {
-               ObservableHandler.this.subscriber = subscriber;
-           }
-        });
+       this.observable = Observable.create(subscriber -> ObservableHandler.this.subscriber = subscriber);
     }
 
     public Observable<E> asObservable() {

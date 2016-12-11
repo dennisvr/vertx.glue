@@ -24,16 +24,16 @@ class GlueBuilder {
     EventSender eventSender
     EventConsumer eventConsumer
 
-    public GlueBuilder(EventSender eventSender, EventConsumer eventConsumer) {
+    GlueBuilder(EventSender eventSender, EventConsumer eventConsumer) {
         this.eventSender = eventSender
         this.eventConsumer = eventConsumer
     }
 
-    public <E> EventVerticle<E> createVerticle(Class<E> interfaceClass, E instance) {
+    def <E> EventVerticle<E> createVerticle(Class<E> interfaceClass, E instance) {
         return new EventVerticle(eventConsumer, interfaceClass, instance)
     }
 
-    public <E> E createRemote(Class<E> interfaceClass) {
+    def <E> E createRemote(Class<E> interfaceClass) {
         def map = [:]
 
         interfaceClass.methods.each() { method ->
@@ -49,7 +49,7 @@ class GlueBuilder {
         return map.asType(interfaceClass)
     }
 
-    private Class resolveClass(def type) {
+    private Class resolveClass(type) {
         try {
             if ((rx.Observable.isAssignableFrom(type.rawType)||Iterable.isAssignableFrom(type.rawType))&&type.actualTypeArguments) {
                 return resolveClass(type.actualTypeArguments[0])
