@@ -32,12 +32,7 @@ public class AsyncResultObservableHandler<E> implements Handler<AsyncResult<E>> 
 
     public AsyncResultObservableHandler(Converter converter) {
         this.converter = converter;
-        this.observable = Observable.create( new Observable.OnSubscribe<E>() {
-            @Override
-            public void call(Subscriber<? super E> subscriber) {
-                AsyncResultObservableHandler.this.subscriber = subscriber;
-            }
-        });
+        this.observable = Observable.create(subscriber -> AsyncResultObservableHandler.this.subscriber = subscriber);
     }
 
     public Observable<E> asObservable() {
