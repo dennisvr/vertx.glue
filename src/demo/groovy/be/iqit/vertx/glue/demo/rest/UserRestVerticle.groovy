@@ -33,7 +33,7 @@ class UserRestVerticle extends AbstractRestVerticle {
 
     UserService userService
 
-    public UserRestVerticle(UserService userService, Converter converter) {
+    UserRestVerticle(UserService userService, Converter converter) {
         super(7072, converter)
         this.userService = userService
         this.converter.withConverter(RoutingContext, UserFilter, new RoutingContextParamsConverter(this.converter))
@@ -47,8 +47,8 @@ class UserRestVerticle extends AbstractRestVerticle {
                 .withResponse(UserDTO)
                 .withError(ErrorDTO)
                 .authorize(Authorization.IS_USER)
-                .handle { Session session, UserFilter filter ->
-                    return userService.getUser(filter.id)
+                .handle { Session session, String id ->
+                    return userService.getUser(id)
                 }
 
         get("/users")
