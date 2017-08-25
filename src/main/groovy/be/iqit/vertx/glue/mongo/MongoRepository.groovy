@@ -13,6 +13,7 @@
 package be.iqit.vertx.glue.mongo
 
 import be.iqit.vertx.glue.paging.Page
+import com.mongodb.client.model.FindOneAndReplaceOptions
 import com.mongodb.client.result.DeleteResult
 import com.mongodb.rx.client.MongoCollection
 import groovy.transform.TypeChecked
@@ -25,6 +26,8 @@ import rx.functions.Func1
  */
 @TypeChecked
 class MongoRepository<E> implements Repository<E> {
+
+    private static final FindOneAndReplaceOptions FIND_ONE_AND_REPLACE_UPSERT = new FindOneAndReplaceOptions().upsert(true)
 
     MongoCollection<E> collection
 
@@ -71,8 +74,9 @@ class MongoRepository<E> implements Repository<E> {
         })
     }
 
-    Observable<Void> save(E object) {
-        collection.insertOne(object).asObservable().map({success -> null})
+    Observable<E> save(Bson filter, E object) {
+        collection.findOneAndReplace(filter, object, FIND_ONE_AND_REPLACE_UPSERT)
+                .defaultIfEmpty(object)
     }
 
     def <A> Observable<List<A>> aggregate(Class<A> clazz, Bson... pipeline) {

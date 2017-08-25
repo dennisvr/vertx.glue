@@ -91,7 +91,7 @@ class UserTest extends Specification {
         User result = remoteUserService.saveUser(user).toBlocking().first()
 
         then:
-        1 * mongoRepository.save(_) >> Observable.just(user)
+        1 * mongoRepository.save(_, _) >> Observable.just(user)
 
         then:
         result != null

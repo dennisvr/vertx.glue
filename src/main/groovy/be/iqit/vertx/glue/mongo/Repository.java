@@ -34,7 +34,7 @@ public interface Repository<E> {
 
     Observable<Page<E>> page(Bson filter, Integer offset, Integer limit);
 
-    Observable<Void> save(E document);
+    Observable<E> save(Bson filter, E document);
 
     <A> Observable<List<A>> aggregate(Class<A> clazz, Bson... pipeline);
 }

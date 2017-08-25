@@ -59,10 +59,6 @@ class MongoUserRepository implements UserRepository {
 
     @Override
     Observable<User> saveUser(User user) {
-            return repository.save(user)
-                    .map({
-                return user
-            })
-
+        return repository.save(Filters.eq("id", user.id), user);
     }
 }
