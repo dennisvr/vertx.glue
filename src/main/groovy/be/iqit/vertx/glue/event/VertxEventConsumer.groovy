@@ -34,8 +34,6 @@ class VertxEventConsumer implements EventConsumer{
         this.vertx = vertx
         this.converter = new FactoryConverter().withDefaultConverter(converter)
         this.converter.withConverter(EventRequest,List,new EventRequestConverter(this.converter))
-//               .withConverter(Throwable, String, new ThrowableToStringConverter(this.converter))
-//                .withConverter(String, Throwable, new StringToThrowableConverter(this.converter))
     }
 
     public <E> void consume(Class<E> interfaceClass, MethodClosure method) {

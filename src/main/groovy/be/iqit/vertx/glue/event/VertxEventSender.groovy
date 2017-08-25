@@ -35,9 +35,6 @@ class VertxEventSender implements EventSender {
     public VertxEventSender(Vertx vertx, Converter converter) {
         this.vertx = vertx
         this.converter = new FactoryConverter().withDefaultConverter(converter)
-//        this.converter.withConverter(EventRequest,List,new EventRequestConverter(this.converter))
-//                .withConverter(Throwable, String, new ThrowableToStringConverter(this.converter))
-//                .withConverter(String, Throwable, new StringToThrowableConverter(this.converter))
     }
 
     public <O> Observable<O> send(Class interfaceClass, String method, Class<O> clazz, Object...params) {
