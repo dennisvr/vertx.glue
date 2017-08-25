@@ -80,7 +80,8 @@ class MongoRepository<E> implements Repository<E> {
     }
 
     def <A> Observable<List<A>> aggregate(Class<A> clazz, Bson... pipeline) {
-        collection.aggregate(Arrays.asList(pipeline), clazz).toObservable().toList()
+        collection.aggregate(Arrays.asList(pipeline), clazz).toObservable()
+                .toList()
     }
 
 }
