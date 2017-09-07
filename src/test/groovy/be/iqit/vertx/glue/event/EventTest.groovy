@@ -45,16 +45,11 @@ class EventTest extends Specification {
         vertx.deployVerticle(eventVerticle)
 
         when:
-        def result = eventSender.send(TestService, "throwError", Integer).onErrorReturn(new Func1<Throwable, Throwable>() {
-            @Override
-            Throwable call(Throwable throwable) {
-                return throwable
-            }
-        }).toBlocking().first()
+        eventSender.send(TestService, "throwError", Integer).toBlocking().first()
 
         then:
-        result.message == "test"
-        result instanceof IllegalArgumentException
+        final IllegalArgumentException exception = thrown()
+        exception.message == 'test'
 
     }
 
